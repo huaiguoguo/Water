@@ -25,7 +25,6 @@
 				"navigationBarTitleText": "报警预警",
 				"enablePullDownRefresh": false
 			}
-
 		}, {
 			"path": "pages/mine/index",
 			"style": {

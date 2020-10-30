@@ -89,19 +89,23 @@
 				device: "设备1"
 			}
 		},
-		onReady(options) {},
+		onReady(options) {
+			// console.log("========================start")
+			// this.getAuth();
+			// this.getDeviceList();
+			// console.log("========================end")
+		},
 		onLoad() {
-			this.getDeviceList();
 			this.getAuth();
+			this.getDeviceList();
 			this.windowHeight = uni.getSystemInfoSync().windowHeight
 			this.windowWidth = uni.getSystemInfoSync().windowWidth
 
 		},
 		methods: {
-			getAuth() {
-				// console.log(this.$api);
-				if (!uni.getStorageSync("token")) {
-					api.post('account/graphql', {
+			async getAuth() {
+				if (!uni.getStorageSync("authToken")) {
+					const result = await api.post('account/graphql', {
 						query: 'mutation ($doc: LoginUser!) { payload: loginUser(user: $doc) { authToken }}',
 						variables: {
 							doc: {
@@ -109,34 +113,29 @@
 								password: '11111123',
 							},
 						},
-					}).then(({
-						data
-					}) => {
-						if (data && data.data.payload.authToken) {
-							uni.setStorageSync("token", data.data.payload.authToken)
-						}
-					})
+					});
+					if (result && result.data.data.payload.authToken) {
+						uni.setStorageSync("authToken", data.data.payload.authToken)
+					}
 				}
 			},
-			getDeviceList() {
+			async getDeviceList() {
 				console.log('请求设备列表 start===============');
-				// console.log(uni.getStorageSync('token'));
-				uni.request({
-					url: "http://t.int.rigoiot.com:11056/data/graphql",
-					methods: "POST",
-					data: {
-						query: "query ($pageInfo: PageInfo!, $filter: String) {payload: getAllGateways(pageInfo: $pageInfo, filter:$filter) {count,nodes {gatewayName,gatewayType,sn,location,address,statusInfo { name, value} ,lastOnlineTime, dataFormatInfo { name, value}} }}",
-						variables: {
-							filter: '',
-							pageInfo: {
-								orderBy: 'status desc,lastOnlineTime desc',
-								offset: 10,
-								limit: 10,
-							},
+				// console.log(uni.getStorageSync('authToken'));
+				const result = await api.post("data/graphql", {
+					query: "query ($pageInfo: PageInfo!, $filter: String) {  payload: getAllGateways(pageInfo: $pageInfo, filter:$filter) {count,nodes {gatewayName,gatewayType,sn,location,address,statusInfo { name, value} ,lastOnlineTime, dataFormatInfo { name, value}} }}",
+					variables: {
+						filter: '',
+						pageInfo: {
+							orderBy: 'status desc,lastOnlineTime desc',
+							offset: 0,
+							limit: 10,
 						},
 					},
 				});
-
+				
+				console.log("=================设备列表结果 start===++++")
+				console.log(result);
 			},
 			markertap(e) {
 				this.getDeviceList()

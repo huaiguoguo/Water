@@ -11,12 +11,16 @@ http.config.baseUrl = "http://t.int.rigoiot.com:11056/"
 //设置请求前拦截器
 http.interceptor.request = (config) => {
 	//添加通用参数
-	const token = uni.getStorageSync("token")
-	const header = {}
-	if (token && url.search("account/graphql") == -1) {
-		header['Authorization'] = token
+	const token = uni.getStorageSync("authToken")
+	
+	let header = {
+		'Content-Type':"application/json"
 	}
-	header['Content-Type'] = "application/json"
+	if (token && config.url.search("account/graphql") == -1) {
+		console.log('FFFFF');
+		header = Object.assign(header, {Authorization: "Bearer "+token})
+	}
+	
 	config.header = header
 }
 
@@ -25,7 +29,6 @@ http.interceptor.response = (response) => {
 	//判断返回状态 执行相应操作
 	return response;
 }
-
 
 // 单独导出(测试接口) import {test} from '@/common/vmeitime-http/'
 export const test = (data) => {
