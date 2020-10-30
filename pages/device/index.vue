@@ -1,0 +1,250 @@
+<template>
+	<view class="container" style="width: 100vw;height: 100%;">
+		<!-- windowHeight
+		windowWidth -->
+		<map id="mapContainer" :latitude="latitude" :style="{width: windowWidth+'px',height: windowHeight + 'px'}" :longitude="longitude"
+		 :markers="markers" @markertap="markertap" @tap="infowindow = 0">
+			<cover-view class="cover_view" v-if="infowindow">
+				<cover-view class="content">
+					<cover-view class="content_item">
+						<text class="content_item_label">设备名称:</text>
+						<text class="content_item_text">{{device}}</text>
+					</cover-view>
+					<cover-view class="content_item">
+						<text class="content_item_label">设备型号:</text>
+						<text class="content_item_text">山北开发区水厂</text>
+					</cover-view>
+					<cover-view class="content_item">
+						<text class="content_item_label">客户名称:</text>
+						<text class="content_item_text">山北开发区水厂</text>
+					</cover-view>
+					<cover-view class="content_item">
+						<text class="content_item_label">质保起始时间:</text>
+						<text class="content_item_text">山北开发区水厂</text>
+					</cover-view>
+					<cover-view class="content_item">
+						<text class="content_item_label">维保周期:</text>
+						<text class="content_item_text">山北开发区水厂</text>
+					</cover-view>
+					<cover-view class="content_item">
+						<text class="content_item_label">报警策略模块:</text>
+						<text class="content_item_text">山北开发区水厂</text>
+					</cover-view>
+					<cover-view class="content_item">
+						<text class="content_item_label">描述:</text>
+						<text class="content_item_text">山北开发区水厂</text>
+					</cover-view>
+				</cover-view>
+				<cover-view class="nav">
+					<text class="nav_text active" @click="redirect(1)">设备信息</text>
+					<text class="nav_text" @click="redirect(2)">运行状态</text>
+					<text class="nav_text" @click="redirect(3)">水质检测</text>
+					<text class="nav_text" @click="redirect(4)">视频监控</text>
+					<text class="nav_text" @click="redirect(5)">到这里去</text>
+				</cover-view>
+			</cover-view>
+		</map>
+
+	</view>
+</template>
+
+<script>
+	import api from '@/common/vmeitime-http/'
+	export default {
+		data() {
+			return {
+				infowindow: 1,
+				markers: [{
+					id: 1,
+					latitude: 34.789689,
+					longitude: 113.696,
+					iconPath: '../../static/app_plus/location@3x.png',
+					width: 100,
+					height: 100
+				}, {
+					id: 2,
+					latitude: 34.789689,
+					longitude: 113.697,
+					iconPath: '../../static/app_plus/location@3x.png',
+					width: 100,
+					height: 100
+				}],
+				controls: [{
+					id: 1,
+					iconPath: '../../static/app_plus/location@3x.png',
+					position: {
+						left: 10,
+						top: 10,
+						width: 10,
+						height: 10
+					},
+					clickable: true
+				}],
+				map: null,
+				enableZoom: true,
+				latitude: 34.789689,
+				longitude: 113.698686,
+				windowHeight: 0,
+				windowWidth: 0,
+				device: "设备1"
+			}
+		},
+		onReady(options) {},
+		onLoad() {
+			this.getDeviceList();
+			this.getAuth();
+			this.windowHeight = uni.getSystemInfoSync().windowHeight
+			this.windowWidth = uni.getSystemInfoSync().windowWidth
+
+		},
+		methods: {
+			getAuth() {
+				// console.log(this.$api);
+				if (!uni.getStorageSync("token")) {
+					api.post('account/graphql', {
+						query: 'mutation ($doc: LoginUser!) { payload: loginUser(user: $doc) { authToken }}',
+						variables: {
+							doc: {
+								emailOrPhone: 'test@rigoiot.com',
+								password: '11111123',
+							},
+						},
+					}).then(({
+						data
+					}) => {
+						if (data && data.data.payload.authToken) {
+							uni.setStorageSync("token", data.data.payload.authToken)
+						}
+					})
+				}
+			},
+			getDeviceList() {
+				console.log('请求设备列表 start===============');
+				// console.log(uni.getStorageSync('token'));
+				uni.request({
+					url: "http://t.int.rigoiot.com:11056/data/graphql",
+					methods: "POST",
+					data: {
+						query: "query ($pageInfo: PageInfo!, $filter: String) {payload: getAllGateways(pageInfo: $pageInfo, filter:$filter) {count,nodes {gatewayName,gatewayType,sn,location,address,statusInfo { name, value} ,lastOnlineTime, dataFormatInfo { name, value}} }}",
+						variables: {
+							filter: '',
+							pageInfo: {
+								orderBy: 'status desc,lastOnlineTime desc',
+								offset: 10,
+								limit: 10,
+							},
+						},
+					},
+				});
+
+			},
+			markertap(e) {
+				this.getDeviceList()
+				if (!this.infowindow) {
+					this.infowindow = 1
+				}
+				if (e.detail.marketId == 1) {
+					this.device = "设备1";
+				} else if (e.detail.markerId == 2) {
+					this.device = "设备2";
+				}
+
+				// console.log(e.detail.marketId);
+			},
+			redirect(type) {
+
+				let url = ""
+				if (type == 1) {
+					url = "/pages/mine/about"
+				} else if (type == 2) {
+					url = "/pages/device/device_status"
+				} else if (type == 3) {
+					url = "/pages/device/water_quality_test"
+				} else if (type == 4) {
+					url = "/pages/device/video_surveillance"
+				} else if (type == 5) {
+					url = "/pages/device/go_map"
+				}
+				console.log(url)
+				if (url) {
+					uni.navigateTo({
+						url
+					});
+				}
+			}
+		}
+	}
+</script>
+
+<style>
+	.cover_view {
+		width: 690rpx;
+		height: 500rpx;
+		background-color: #F2F6FC;
+		/* display: flex; */
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		position: absolute;
+		left: 0;
+		bottom: 100;
+		z-index: 9999;
+		margin-left: 35rpx;
+		border-radius: 10rpx;
+	}
+
+	.content {
+		width: 690rpx;
+		height: 390rpx;
+		margin-top: 20rpx;
+		/* background-color: #0A98D5; */
+		border-top-left-radius: 10rpx;
+		border-top-right-radius: 10rpx;
+	}
+
+	.content_item {
+		/* background-color: #000000; */
+		/* display: flex; */
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		margin-top: 20rpx;
+	}
+
+	.content_item_label {
+		flex: 1;
+		/* color: #2C405A; */
+		text-align: left;
+		font-size: 25rpx;
+		margin-left: 50rpx;
+	}
+
+	.content_item_text {
+		flex: 1.8;
+		color: red;
+		/* background-color: pink; */
+		font-size: 25rpx;
+	}
+
+	.nav {
+		width: 690rpx;
+		height: 100rpx;
+		/* 		display: flex; */
+		flex-direction: row;
+		justify-content: space-around;
+		align-items: center;
+		/* background-color: green; */
+	}
+
+	.nav_text {
+		background-color: #8E8E8E;
+		font-size: 26rpx;
+		padding: 10px 5px;
+		border-radius: 10rpx;
+		color: #FFFFFF;
+	}
+
+	.active {
+		background-color: #8E8E8E;
+	}
+</style>

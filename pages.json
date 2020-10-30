@@ -7,12 +7,11 @@
 		// 	}
 		// }, 
 		{
-			"path": "pages/device/test",
+			"path": "pages/device/index",
 			"style": {
 				"navigationBarTitleText": "设备间",
 				"enablePullDownRefresh": false
 			}
-
 		}, {
 			"path": "pages/work_order/inspection/index",
 			"style": {
@@ -77,7 +76,6 @@
                 "navigationBarTitleText": "关于我们",
                 "enablePullDownRefresh": false
             }
-            
         }
         ,{
             "path" : "pages/mine/question",
@@ -86,7 +84,6 @@
                 "navigationBarTitleText": "常见问题",
                 "enablePullDownRefresh": false
             }
-            
         }
         ,{
             "path" : "pages/mine/feedback",
@@ -95,7 +92,6 @@
                 "navigationBarTitleText": "意见反馈",
                 "enablePullDownRefresh": false
             }
-            
         }
         ,{
             "path" : "pages/mine/manual",
@@ -104,7 +100,6 @@
                 "navigationBarTitleText": "使用手册",
                 "enablePullDownRefresh": false
             }
-            
         }
         ,{
             "path" : "pages/mine/login_reg/login",
@@ -114,7 +109,6 @@
                 "enablePullDownRefresh": false,
 				"navigationStyle":"custom"
             }
-            
         }
         ,{
             "path" : "pages/mine/login_reg/reg",
@@ -124,34 +118,6 @@
                 "enablePullDownRefresh": false,
 				"navigationStyle":"custom"
             }
-            
-        }
-        ,{
-            "path" : "pages/device/map",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/device/test",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/device/abc",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
         }
     ],
 	"globalStyle": {
@@ -166,14 +132,8 @@
 		"borderStyle": "black",
 		"backgroundColor": "#F8F8F8",
 		"list": [
-			// {
-			// 	"pagePath": "pages/device/map",
-			// 	"iconPath": "static/device@3x.png",
-			// 	"selectedIconPath": "static/device_selected@3x.png",
-			// 	"text": "设备间1"
-			// },
 			{
-					"pagePath": "pages/device/test",
+					"pagePath": "pages/device/index",
 					"iconPath": "static/device@3x.png",
 					"selectedIconPath": "static/device_selected@3x.png",
 					"text": "设备间"
