@@ -17,7 +17,6 @@ http.interceptor.request = (config) => {
 		'Content-Type':"application/json"
 	}
 	if (token && config.url.search("account/graphql") == -1) {
-		console.log('FFFFF');
 		header = Object.assign(header, {Authorization: "Bearer "+token})
 	}
 	
@@ -29,6 +28,7 @@ http.interceptor.response = (response) => {
 	//判断返回状态 执行相应操作
 	return response;
 }
+
 
 // 单独导出(测试接口) import {test} from '@/common/vmeitime-http/'
 export const test = (data) => {

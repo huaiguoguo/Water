@@ -115,13 +115,11 @@
 						},
 					});
 					if (result && result.data.data.payload.authToken) {
-						uni.setStorageSync("authToken", data.data.payload.authToken)
+						uni.setStorageSync("authToken", result.data.data.payload.authToken)
 					}
 				}
 			},
 			async getDeviceList() {
-				console.log('请求设备列表 start===============');
-				// console.log(uni.getStorageSync('authToken'));
 				const result = await api.post("data/graphql", {
 					query: "query ($pageInfo: PageInfo!, $filter: String) {  payload: getAllGateways(pageInfo: $pageInfo, filter:$filter) {count,nodes {gatewayName,gatewayType,sn,location,address,statusInfo { name, value} ,lastOnlineTime, dataFormatInfo { name, value}} }}",
 					variables: {
@@ -147,7 +145,6 @@
 				} else if (e.detail.markerId == 2) {
 					this.device = "设备2";
 				}
-
 				// console.log(e.detail.marketId);
 			},
 			redirect(type) {
