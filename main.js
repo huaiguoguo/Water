@@ -3,7 +3,7 @@ import App from './App'
 import api from '@/common/vmeitime-http/'
 
 
-Vue.prototype.$request = api
+Vue.prototype.$api = api
 
 Vue.config.productionTip = false
 

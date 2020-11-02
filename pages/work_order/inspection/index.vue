@@ -104,13 +104,15 @@
 					})
 				}
 			}
+		},
+		onLoad(){
+
 		}
 	}
 </script>
 
 <style lang="stylus">
 	.container{
-		
 		.tab{
 			width 100%
 			height 75rpx

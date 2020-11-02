@@ -2,14 +2,14 @@
 	<view class="container">
 		<view class="opinion">
 			<view class="content">
-				<textarea value="" placeholder="请输入反馈内容, 我们会为您更好的服务" />
+				<textarea value="" placeholder="请输入反馈内容, 我们会为您更好的服务" v-model="content"/>
 			</view>
 			<view class="word_total">
 				<text>0/200</text>
 			</view>
 		</view>
 		<view class="photo_container">
-			<view class="photo">
+			<view class="photo" @click="upload()">
 				<image src="../../static/ucenter/photo.png" mode="scaleToFill"></image>
 				<text>照片</text>
 			</view>
@@ -24,8 +24,35 @@
 	export default {
 		data() {
 			return {
-				
+				pic:'',
+				content: ''
 			};
+		},
+		methods:{
+			upload(){
+				const _this = this;
+				uni.chooseImage({
+					count: 6, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择L
+					complete:function(chooseImageRes){
+						const tempFilePaths = chooseImageRes.tempFilePaths;
+						console.log(tempFilePaths);
+						uni.uploadFile({
+							url: 'http://sj.cleanwaterbj.com/app/upload', //仅为示例，非真实的接口地址
+							filePath: tempFilePaths[0],
+							name: 'img',
+							formData: {
+								'user': 'test'
+							},
+							success: (uploadFileRes) => {
+								_this.pic = uploadFileRes.data
+								console.log(uploadFileRes.data);
+							}
+						});
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -108,7 +135,7 @@
 			justify-content center;
 			align-items center;
 			margin-top 70rpx;
-			
+
 			button{
 				width: 494rpx;
 				height: 88rpx;
@@ -116,6 +143,5 @@
 				border-radius: 44rpx;
 			}
 		}
-		
 	}
 </style>
