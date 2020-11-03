@@ -5,7 +5,7 @@
 				<textarea value="" placeholder="请输入反馈内容, 我们会为您更好的服务" v-model="content"/>
 			</view>
 			<view class="word_total">
-				<text>0/200</text>
+				<text></text>
 			</view>
 		</view>
 		<view class="photo_container">
@@ -15,7 +15,7 @@
 			</view>
 		</view>
 		<view class="btn_container">
-			<button type="default">提交反馈</button>
+			<button type="default" @click="submit()">提交反馈</button>
 		</view>
 	</view>
 </template>
@@ -28,7 +28,19 @@
 				content: ''
 			};
 		},
+		onReady:function(){
+			const token = uni.getStorageSync('token')
+			if(!token){
+				console.log("未登录");
+				uni.redirectTo({
+					url: "/pages/mine/login_reg/login"
+				})
+			}
+		},
 		methods:{
+			submit(){
+				this.$api.post("");
+			},
 			upload(){
 				const _this = this;
 				uni.chooseImage({
@@ -39,7 +51,7 @@
 						const tempFilePaths = chooseImageRes.tempFilePaths;
 						console.log(tempFilePaths);
 						uni.uploadFile({
-							url: 'http://sj.cleanwaterbj.com/app/upload', //仅为示例，非真实的接口地址
+							url: _this.$api.config.baseUrl+'app/upload', //仅为示例，非真实的接口地址
 							filePath: tempFilePaths[0],
 							name: 'img',
 							formData: {

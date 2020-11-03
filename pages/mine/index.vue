@@ -9,8 +9,8 @@
 					<image src="../../static/ucenter/avator@2x.png" mode="scaleToFill"></image>
 				</view>
 				<view class="info">
-					<text>张师傅</text>
-					<text>166****8888</text>
+					<text>{{userInfo.username}}</text>
+					<text>{{userInfo.nickname}}</text>
 				</view>
 			</view>
 		</view>
@@ -35,6 +35,7 @@
 	export default {
 		data() {
 			return {
+				userInfo: null,
 				menu_list: [{
 						title: '修改密码',
 						icon: '../../static/ucenter/change_pwd@2x.png',
@@ -67,6 +68,17 @@
 					},
 				]
 			};
+		},
+		onReady() {
+			const token = uni.getStorageSync('token')
+			if (!token) {
+				uni.redirectTo({
+					url: "/pages/mine/login_reg/login"
+				})
+			}
+		},
+		onLoad() {
+			this.userInfo = uni.getStorageSync('userinfo')
 		},
 		methods: {
 			redirect(index) {

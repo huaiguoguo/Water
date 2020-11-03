@@ -4,12 +4,12 @@
 			<image src="../../../static/login_reg/head_bg@2x.png" mode="scaleToFill"></image>
 		</view>
 		<view class="tab">
-			<view class="login">
+			<view :class="active==1?'login active':'login'" @click="active = 1">
 				<text>登录</text>
 			</view>
-			<view class="reg">
+<!-- 			<view :class="active==2?'reg active':'reg'" @click="active = 2">
 				<text>注册</text>
-			</view>
+			</view> -->
 		</view>
 		<view class="content">
 			<view class="form-item">
@@ -18,35 +18,47 @@
 				</view>
 
 				<view class="item-input">
-					<input type="text" value="" placeholder="请输入手机号码"/>
+					<input type="text" value="" placeholder="请输入手机号码" v-model="mobile"/>
 				</view>
 
-				<view class="item-right">
+				<view class="item-right" @click="mobile = ''">
 					<image src="../../../static/login_reg/clean@2x.png" mode="scaleToFill"></image>
 				</view>
 			</view>
-			
 			<view class="form-item">
 				<view class="item-label">
 					<image src="../../../static/login_reg/lock@2x.png" mode="scaleToFill"></image>
 				</view>
 			
 				<view class="item-input">
-					<input type="text" value="" placeholder="请输入密码"/>
+					<input type="password" value="" placeholder="请输入密码" v-model="password"/>
 				</view>
-			
-				<view class="item-right">
+
+				<view class="item-right" @click="password = ''">
+					<image src="../../../static/login_reg/clean@2x.png" mode="scaleToFill"></image>
+				</view>
+			</view>
+
+			<view class="form-item" v-show="active == 2">
+				<view class="item-label">
+					<image src="../../../static/login_reg/lock@2x.png" mode="scaleToFill"></image>
+				</view>
+				<view class="item-input">
+					<input type="password" value="" placeholder="请再次确认您的密码" v-model="re_password"/>
+				</view>
+				<view class="item-right" @click="re_password = ''">
 					<image src="../../../static/login_reg/clean@2x.png" mode="scaleToFill"></image>
 				</view>
 			</view>
 			
 			<view class="form-item forget_password">
-				<text>忘记密码</text>
+				<!-- <text v-show="active == 1" @click="forget_password()">忘记密码</text> -->
 			</view>
 		</view>
 		
 		<view class="button">
-			<button type="primary">登录</button>
+			<button type="primary" v-show="active == 1" @click="login()">登录</button>
+			<button type="primary" v-show="active == 2" @click="reg()">注册</button>
 		</view>
 
 		<view class="copyright">
@@ -60,8 +72,62 @@
 	export default {
 		data() {
 			return {
-				
+				active:1,
+				mobile:'',
+				password: '',
+				re_password:''
 			};
+		},
+		methods:{
+			async login(){
+				const mobile = this.mobile;
+				const password = this.password;
+				if(this.checkForm()){
+					const {data, statusCode} = await this.$api.get('api/login', {account:mobile, password});
+					if(data.code){
+						this.$global.toast("登录成功", 'success', 1500, function(){
+							uni.setStorageSync('userinfo', data.data.userinfo);
+							setTimeout(function(){
+								uni.redirectTo({
+									url:"/pages/mine/about"
+								})
+							}, 1500)
+						})
+					}else{
+						this.$global.toast(data.msg)
+					}
+				}
+			},
+			async reg(){
+				if(this.checkForm()){
+					const mobile = this.mobile;
+					const password = this.password;
+					const {data, statusCode} = await this.$api.post('api/register', {mobile, password});
+					console.log(data);
+					if(data.code){
+						this.active = 1;
+						this.$global.toast("注册成功", 'success')
+					}else{
+						this.$global.toast("注册失败")
+					}
+				}
+			},
+			checkForm(){
+				if(!this.mobile || !this.password){
+					this.$global.toast("请填写手机号和密码")
+					return false;
+				}
+				if(this.active == 2 && (!this.re_password || (this.password != this.re_password))){
+					this.$global.toast("确认密码错误")
+					return false;
+				}
+				return true
+			},
+			forget_password(){
+				uni.navigateTo({
+					url:'./forget_pwd'
+				})
+			}
 		}
 	}
 </script>
@@ -97,7 +163,7 @@
 			box-sizing border-box;
 			
 			.login{
-				font-size: 42rpx;
+				font-size: 30rpx;
 				font-family: Microsoft YaHei;
 				font-weight: 400;
 				color: #333333;
@@ -111,6 +177,10 @@
 				font-weight: 400;
 				color: #4D4D4D;
 				// line-height: 36px;
+			}
+			
+			.active{
+				font-size: 42rpx;
 			}
 		}
 		

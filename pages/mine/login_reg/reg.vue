@@ -4,10 +4,10 @@
 			<image src="../../../static/login_reg/head_bg@2x.png" mode="scaleToFill"></image>
 		</view>
 		<view class="tab">
-			<!-- <view class="login">
+			<view class="login" @click="active = 1">
 				<text>登录</text>
-			</view> -->
-			<view class="reg">
+			</view>
+			<view class="reg" @click="active = 2">
 				<text>注册</text>
 			</view>
 		</view>
@@ -40,7 +40,7 @@
 				</view>
 			</view>
 			
-			<view class="form-item">
+			<view class="form-item" v-show="active == 2">
 				<view class="item-label">
 					<image src="../../../static/login_reg/lock@2x.png" mode="scaleToFill"></image>
 				</view>
@@ -74,8 +74,10 @@
 	export default {
 		data() {
 			return {
-				
+				active: 1
 			};
+		},
+		methods:{
 		}
 	}
 </script>

@@ -118,6 +118,15 @@
 				"navigationStyle":"custom"
             }
         }
+        ,{
+            "path" : "pages/mine/login_reg/forget_pwd",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

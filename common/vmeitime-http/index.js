@@ -7,16 +7,17 @@ import http from './interface'
  */
 
 //设置baseUrl
-http.config.baseUrl = "http://t.int.rigoiot.com:11056/"
+// http.config.baseUrl = "http://t.int.rigoiot.com:11056/"
+http.config.baseUrl = "http://sj.cleanwaterbj.com/"
 //设置请求前拦截器
 http.interceptor.request = (config) => {
 	//添加通用参数
-	const token = uni.getStorageSync("authToken")
+	const token = uni.getStorageSync("token")
 	
 	let header = {
 		'Content-Type':"application/json"
 	}
-	if (token && config.url.search("account/graphql") == -1) {
+	if (token && config.url.search("api/login") == -1) {
 		header = Object.assign(header, {Authorization: "Bearer "+token})
 	}
 	
