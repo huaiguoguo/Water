@@ -26,7 +26,7 @@
 				"enablePullDownRefresh": false
 			}
 		}, {
-			"path": "pages/mine/index",
+			"path": "pages/mine/home",
 			"style": {
 				"navigationBarTitleText": "个人中心",
 				"enablePullDownRefresh": false,

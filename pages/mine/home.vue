@@ -66,12 +66,17 @@
 						icon: '../../static/ucenter/feedback@2x.png',
 						sub_title: '',
 					},
+					{
+						title: '退出登录',
+						icon: '../../static/ucenter/feedback@2x.png',
+						sub_title: '',
+					},
 				]
 			};
 		},
 		onReady() {
-			const token = uni.getStorageSync('token')
-			if (!token) {
+			const userinfo = uni.getStorageSync('userinfo')
+			if (!userinfo) {
 				uni.redirectTo({
 					url: "/pages/mine/login_reg/login"
 				})
@@ -96,6 +101,11 @@
 					url = 'question';
 				} else if (index == 6) {
 					url = 'feedback';
+				} else if (index == 7) {
+					uni.removeStorageSync('userinfo')
+					uni.redirectTo({
+						url:'login_reg/login'
+					})
 				} else {
 					alert('错误!');
 					return false;

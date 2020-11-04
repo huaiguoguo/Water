@@ -89,8 +89,8 @@
 							uni.setStorageSync('userinfo', data.data.userinfo);
 							setTimeout(function(){
 								uni.redirectTo({
-									url:"/pages/mine/about"
-								})
+									url: '/pages/mine/home'
+								});
 							}, 1500)
 						})
 					}else{
