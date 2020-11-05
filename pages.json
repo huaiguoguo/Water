@@ -167,7 +167,7 @@
 				"selectedIconPath": "static/waring_selected@3x.png",
 				"text": "报警预警"
 			}, {
-				"pagePath": "pages/mine/index",
+				"pagePath": "pages/mine/home",
 				"iconPath": "static/mine@3x.png",
 				"selectedIconPath": "static/mine_selected@3x.png",
 				"text": "个人中心"

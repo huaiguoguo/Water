@@ -12,13 +12,14 @@ http.config.baseUrl = "http://sj.cleanwaterbj.com/"
 //设置请求前拦截器
 http.interceptor.request = (config) => {
 	//添加通用参数
-	const token = uni.getStorageSync("token")
-	
+	const userinfo = uni.getStorageSync("userinfo")
+
 	let header = {
 		'Content-Type':"application/json"
 	}
-	if (token && config.url.search("api/login") == -1) {
-		header = Object.assign(header, {Authorization: "Bearer "+token})
+	if (userinfo && userinfo.token && config.url.search("app/login") == -1) {
+		// header = Object.assign(header, {Authorization: "Bearer "+token})
+		header = Object.assign(header, {token: userinfo.token})
 	}
 	
 	config.header = header

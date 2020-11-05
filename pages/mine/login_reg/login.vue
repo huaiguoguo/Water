@@ -84,15 +84,19 @@
 				const password = this.password;
 				if(this.checkForm()){
 					const {data, statusCode} = await this.$api.get('api/login', {account:mobile, password});
+					console.log("============= dataAAAAAAAAAAA start")
+					console.log(data)
+					console.log("============= dataAAAAAAAAAAA end")
 					if(data.code){
 						this.$global.toast("登录成功", 'success', 1500, function(){
 							uni.setStorageSync('userinfo', data.data.userinfo);
 							setTimeout(function(){
-								uni.redirectTo({
+								uni.switchTab({
 									url: '/pages/mine/home'
 								});
 							}, 1500)
 						})
+						
 					}else{
 						this.$global.toast(data.msg)
 					}

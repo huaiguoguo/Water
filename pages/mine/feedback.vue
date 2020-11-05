@@ -10,7 +10,8 @@
 		</view>
 		<view class="photo_container">
 			<view class="photo" @click="upload()">
-				<image :src="pic"></image>
+				<!-- <img :src="pic"   style="width: 150rpx;height: 150rpx;" mode="aspectFill" alt=""> -->
+				<image :src="pic" style="width: 150rpx;height: 150rpx;" mode="aspectFill"></image>
 				<text>照片</text>
 			</view>
 		</view>
@@ -40,9 +41,10 @@
 			this.userInfo = uni.getStorageSync('userinfo')	
 		},
 		methods:{
-			submit(){
-				// this.$api.post("");
-				// console.log(
+			async submit(){
+				const pic = this.pic;
+				const content = this.content;
+				const result = await this.$api.post("app/feedback", {pic, content});
 			},
 			upload(){
 				const _this = this;
@@ -63,14 +65,16 @@
 							header:{ token },
 							formData: {},
 							success: (uploadFileRes) => {
-								_this.pic = "http://sj.cleanwaterbj.com/"+uploadFileRes.data
+								// _this.pic = "http://img0.bdstatic.com/static/searchdetail/img/logo-2X_0c4ef02.png"
+								_this.pic = uploadFileRes.data
 								console.log(uploadFileRes.data);
 							}
 						});
 					}
 				})
 			}
-		}
+		},
+		
 	}
 </script>
 

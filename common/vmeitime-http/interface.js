@@ -70,6 +70,10 @@ export default {
 			let _config = null
 			
 			options.complete = (response) => {
+				// console.log('===================== complete start');
+				// console.log(response);
+				// console.log('===================== complete end');
+				
 				let statusCode = response.statusCode
 				response.config = _config
 				if (process.env.NODE_ENV === 'development') {
